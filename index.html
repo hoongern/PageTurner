@@ -1,0 +1,64 @@
+<html>
+<head>
+<style>
+    body {
+        background: #000000;
+        color: #ffffff;
+    }
+    
+    #wrapper {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+    }
+
+    #wrapper.turning {
+        background: #ff0000;
+    }
+
+    #wrapper > span {
+        font-size: calc(100% + 10vw);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-variant: small-caps;
+        font-weight: bold;
+        pointer-events: none;
+    }
+</style>
+</head>
+
+<body>
+    <div id="wrapper" ontouchstart="turnPage()" onclick="turnPage()">
+        <span>Turn Page</span>
+    </div>
+    <script type="text/javascript">
+    var turnPage = (function() {
+        var wrapper = document.getElementById('wrapper');
+        var recentlyTriggered = false;
+        return function() {
+            if (recentlyTriggered) {
+                return;
+            }
+
+            recentlyTriggered = true;
+            wrapper.classList.add('turning');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/turn', true);
+            xhr.send();
+
+            setTimeout(function() {
+                recentlyTriggered = false;
+                wrapper.classList.remove('turning');
+            }, 500);
+        }
+    })();
+    </script>
+</body>
+</html>
